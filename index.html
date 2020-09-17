@@ -1,0 +1,133 @@
+<html>
+
+<head>
+    <title>Case Study: WEB - LBJ 2020</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <script>
+        var x, y, text, checkBox;
+        var cipher, cipher1;
+        var decipher, decipher1;
+        var username, password;
+
+        function myValidate() {
+
+            x = document.getElementById("user").value;
+            y = document.getElementById("pass").value;
+            var checkBox = document.getElementById("checkBox");
+
+            //Getting user and pass value in x and y
+
+            if (x == "LTI" && y == 123) {
+
+                if (checkBox.checked == true) {
+
+                    cipher = CryptoJS.AES.encrypt(x, "CIPHERKEY");
+                    cipher = cipher.toString();
+                    console.log(cipher + " username");
+                    //Username Getting Encrp
+
+//                    var decipher = CryptoJS.AES.decrypt(cipher, "CIPHERKEY");
+//                    decipher = decipher.toString(CryptoJS.enc.Utf8);
+//                    console.log(decipher + " Decrpyted User");
+                    //Username Getting Decryp
+
+                    var cipher1 = CryptoJS.AES.encrypt(y, "kek");
+                    cipher1 = cipher1.toString();
+                    console.log(cipher1 + " password");
+                    //Password Getting Encrp
+
+                    var decipher1 = CryptoJS.AES.decrypt(cipher1, "kek");
+                    decipher1 = decipher1.toString(CryptoJS.enc.Utf8);
+                    console.log(decipher1 + " Decrpyted Pass");
+                    //Password Getting Decryp
+
+                    setCookie("username", cipher, 1); //new cookie 1
+                    setCookie("password", cipher1, 1); //new cookie 2
+                    //nextPage();
+
+                    //                    var dd = new Date();
+                    //                    console.log(dd.getTime());
+                    checkCookie(); //this checks if cookies still exists or not
+
+                } else {
+                    
+                    var queryString = "?para1=" + x + "&para2=" + y;
+                    window.location.href = "welcome.html" + queryString;
+                }
+
+            } else {
+                text = "Invalid Username/Password, TRY AGAIN!";
+                document.getElementById("warning").innerHTML = text; //error for wrong input
+
+            }
+        }
+
+        function checkCookie() {
+            username = getCookie("username");
+            password = getCookie("password");
+
+            if (username != "") {
+                //Right case: cookie exists and fir nextPage ke function se new page pe leke jayega
+                nextPage();
+            } else {
+                if (username != "" && username != null) {
+                    setCookie("username", cipher, 1);
+                    //Wrong case: cookie doesnt exist but wo setCookie se new cookie banadega
+                }
+            }
+        }
+
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+            //Cname is name, cvalue is passed value, exdays is for expiry which is one
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function nextPage() {
+            
+            decipher = CryptoJS.AES.decrypt(username, "CIPHERKEY");
+            decipher = decipher.toString(CryptoJS.enc.Utf8);
+            console.log(typeof(decipher));
+            console.log(decipher);
+            
+            var queryString = "?para1=" + decipher + "&para2=" + password;
+            window.location.href = "welcome.html" + queryString;
+            //Ye next page ke liye function
+        }
+    </script>
+</head>
+
+<body onload="checkCookie()">
+    <!--    <form id="formid" name="formm" onSubmit="return myValidate();">-->
+    <p id="warning" ; style="color:red;"></p>
+    <label>Username</label>
+    <input type="text" placeholder="Enter Username" id="user" required>
+    <br>
+    <label>Password</label>
+    <input type="password" placeholder="Enter Password" id="pass" required>
+    <br>
+    <input type="checkbox" id="checkBox">Remember me
+    <br>
+    <button type="submit" name="submit" onclick="myValidate()">Login</button>
+    <!--    </form>-->
+</body>
+
+</html>
