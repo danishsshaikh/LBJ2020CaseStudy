@@ -26,11 +26,6 @@
                     console.log(cipher + " username");
                     //Username Getting Encrp
 
-//                    var decipher = CryptoJS.AES.decrypt(cipher, "CIPHERKEY");
-//                    decipher = decipher.toString(CryptoJS.enc.Utf8);
-//                    console.log(decipher + " Decrpyted User");
-                    //Username Getting Decryp
-
                     var cipher1 = CryptoJS.AES.encrypt(y, "kek");
                     cipher1 = cipher1.toString();
                     console.log(cipher1 + " password");
@@ -43,10 +38,7 @@
 
                     setCookie("username", cipher, 1); //new cookie 1
                     setCookie("password", cipher1, 1); //new cookie 2
-                    //nextPage();
-
-                    //                    var dd = new Date();
-                    //                    console.log(dd.getTime());
+                    
                     checkCookie(); //this checks if cookies still exists or not
 
                 } else {
